@@ -2,6 +2,7 @@ package cache
 
 import (
 	"database/sql"
+	"errors"
 	"fmt"
 	"path/filepath"
 	"time"
@@ -56,7 +57,7 @@ func (c *SQLiteCache) Get(key string) ([]byte, bool, error) {
 
 	query := "SELECT value, expires_at FROM cache WHERE key = ?"
 	err := c.db.QueryRow(query, key).Scan(&value, &expiresAt)
-	if err == sql.ErrNoRows {
+	if errors.Is(err, sql.ErrNoRows) {
 		return nil, false, nil
 	}
 	if err != nil {
