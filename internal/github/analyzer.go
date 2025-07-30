@@ -30,13 +30,13 @@ func (ra *RepoAnalyzer) SetCacheTTL(ttl time.Duration) {
 	ra.client.SetCacheTTL(ttl)
 }
 
-func (ra *RepoAnalyzer) Analyze(ctx context.Context, repo string) (*metrics.Repository, error) {
-	metrics, err := ra.client.CollectBasicMetrics(ctx, repo)
+func (ra *RepoAnalyzer) Analyze(ctx context.Context, url string) (*metrics.Repository, error) {
+	repo, err := ra.client.CollectBasicMetrics(ctx, url)
 	if err != nil {
-		return nil, fmt.Errorf("failed to collect metrics for %s: %w", repo, err)
+		return nil, fmt.Errorf("failed to collect metrics for %s: %w", url, err)
 	}
 
-	metrics.Score = ra.scorer.Score(metrics)
+	repo.Score = ra.scorer.Score(repo)
 
-	return metrics, nil
+	return repo, nil
 }
