@@ -1,10 +1,9 @@
 package formatter
 
 import (
-	"fmt"
 	"io"
-	"text/tabwriter"
 
+	"github.com/olekukonko/tablewriter"
 	"github.com/yourname/gh-inspector/internal/github"
 )
 
@@ -15,34 +14,21 @@ func NewTableFormatter() *TableFormatter {
 }
 
 func (f *TableFormatter) Format(writer io.Writer, metrics []*github.RepoMetrics) error {
-	w := tabwriter.NewWriter(writer, 0, 0, 3, ' ', 0)
-	_, err := fmt.Fprintln(w, "REPOSITORY\tSCORE\tSTARS\tFORKS\tOPEN ISSUES\tOPEN PRS\tLAST COMMIT\tLANGUAGE\tCI/CD\tLICENSE")
-	if err != nil {
-		return err
-	}
-	_, err = fmt.Fprintln(w, "----------\t-----\t-----\t-----\t-----------\t--------\t-----------\t--------\t-----\t-------")
-	if err != nil {
-		return err
-	}
+	table := tablewriter.NewWriter(writer)
+	table.SetHeader(GetRecordHeaders())
+
+	table.SetBorder(false)
+	table.SetCenterSeparator("")
+	table.SetColumnSeparator("")
+	table.SetRowSeparator("")
+	table.SetHeaderAlignment(tablewriter.ALIGN_LEFT)
+	table.SetAlignment(tablewriter.ALIGN_LEFT)
 
 	for _, m := range metrics {
-		record := MetricsToRecord(m)
-		_, err = fmt.Fprintf(w, "%s\t%.1f\t%d\t%d\t%d\t%d\t%s\t%s\t%s\t%s\n",
-			record.Repository,
-			record.Score,
-			record.Stars,
-			record.Forks,
-			record.OpenIssues,
-			record.OpenPRs,
-			record.LastCommit,
-			record.Language,
-			record.CICD,
-			record.License,
-		)
-		if err != nil {
-			return err
-		}
+		raw := MetricsToRecord(m).Strings()
+		table.Append(raw)
 	}
 
-	return w.Flush()
+	table.Render()
+	return nil
 }

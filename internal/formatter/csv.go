@@ -18,20 +18,7 @@ func (f *CSVFormatter) Format(writer io.Writer, metrics []*github.RepoMetrics) e
 	w := csv.NewWriter(writer)
 	defer w.Flush()
 
-	headers := []string{
-		"Repository",
-		"Score",
-		"Stars",
-		"Forks",
-		"Open Issues",
-		"Open PRs",
-		"Last Commit",
-		"Language",
-		"CI/CD",
-		"License",
-		"Description",
-		"Archived",
-	}
+	headers := GetRecordHeaders()
 	if err := w.Write(headers); err != nil {
 		return err
 	}

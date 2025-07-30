@@ -2,6 +2,7 @@ package formatter
 
 import (
 	"fmt"
+	"reflect"
 	"time"
 
 	"github.com/yourname/gh-inspector/internal/github"
@@ -70,4 +71,55 @@ func MetricsToRecord(m *github.RepoMetrics) *Record {
 		Description: m.Description,
 		Archived:    archived,
 	}
+}
+
+func (r *Record) String() string {
+	return fmt.Sprintf(
+		"Repository: %s, Score: %.1f, Stars: %d, Forks: %d, Open Issues: %d, Open PRs: %d, Last Commit: %s, Language: %s, CI/CD: %s, License: %s, Description: %s, Archived: %s",
+		r.Repository,
+		r.Score,
+		r.Stars,
+		r.Forks,
+		r.OpenIssues,
+		r.OpenPRs,
+		r.LastCommit,
+		r.Language,
+		r.CICD,
+		r.License,
+		r.Description,
+		r.Archived,
+	)
+}
+
+func (r *Record) Strings() []string {
+	return []string{
+		r.Repository,
+		fmt.Sprintf("%.1f", r.Score),
+		fmt.Sprintf("%d", r.Stars),
+		fmt.Sprintf("%d", r.Forks),
+		fmt.Sprintf("%d", r.OpenIssues),
+		fmt.Sprintf("%d", r.OpenPRs),
+		r.LastCommit,
+		r.Language,
+		r.CICD,
+		r.License,
+		r.Description,
+		r.Archived,
+	}
+}
+
+func GetRecordHeaders() []string {
+	record := Record{}
+	t := reflect.TypeOf(record)
+	headers := make([]string, 0, t.NumField())
+
+	for i := 0; i < t.NumField(); i++ {
+		field := t.Field(i)
+		jsonTag := field.Tag.Get("json")
+		if jsonTag != "" && jsonTag != "-" {
+			headers = append(headers, jsonTag)
+		}
+	}
+
+	return headers
 }

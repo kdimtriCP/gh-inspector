@@ -30,7 +30,7 @@ var scoreCmd = &cobra.Command{
 		}
 
 		scoringConfig := &scoring.Config{}
-		viper.UnmarshalKey("scoring", scoringConfig)
+		_ = viper.UnmarshalKey("scoring", scoringConfig)
 
 		analyzer := github.NewRepoAnalyzer(token, scoringConfig)
 		ctx := context.Background()
