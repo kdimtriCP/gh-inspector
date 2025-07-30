@@ -3,9 +3,9 @@ package formatter
 import (
 	"io"
 
-	"github.com/yourname/gh-inspector/internal/github"
+	"github.com/kdimtriCP/gh-inspector/internal/metrics"
 )
 
 type Formatter interface {
-	Format(writer io.Writer, metrics []*github.RepoMetrics) error
+	Format(writer io.Writer, metrics []*metrics.Repository) error
 }

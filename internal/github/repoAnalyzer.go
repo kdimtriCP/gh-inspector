@@ -4,7 +4,8 @@ import (
 	"context"
 	"fmt"
 
-	"github.com/yourname/gh-inspector/internal/scoring"
+	"github.com/kdimtriCP/gh-inspector/internal/metrics"
+	"github.com/kdimtriCP/gh-inspector/internal/scoring"
 )
 
 type RepoAnalyzer struct {
@@ -19,7 +20,7 @@ func NewRepoAnalyzer(token string, scoringConfig *scoring.Config) *RepoAnalyzer 
 	}
 }
 
-func (ra *RepoAnalyzer) Analyze(ctx context.Context, repo string) (*RepoMetrics, error) {
+func (ra *RepoAnalyzer) Analyze(ctx context.Context, repo string) (*metrics.Repository, error) {
 	metrics, err := ra.client.CollectBasicMetrics(ctx, repo)
 	if err != nil {
 		return nil, fmt.Errorf("failed to collect metrics for %s: %w", repo, err)

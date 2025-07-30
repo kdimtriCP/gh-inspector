@@ -5,7 +5,7 @@ import (
 	"reflect"
 	"time"
 
-	"github.com/yourname/gh-inspector/internal/github"
+	"github.com/kdimtriCP/gh-inspector/internal/metrics"
 )
 
 const (
@@ -30,7 +30,7 @@ type Record struct {
 	Archived    string  `json:"archived"`
 }
 
-func MetricsToRecord(m *github.RepoMetrics) *Record {
+func MetricsToRecord(m *metrics.Repository) *Record {
 	lastCommit := "N/A"
 	if !m.LastCommitDate.IsZero() {
 		daysAgo := int(time.Since(m.LastCommitDate).Hours() / 24)

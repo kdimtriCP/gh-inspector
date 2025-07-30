@@ -3,8 +3,8 @@ package formatter
 import (
 	"io"
 
+	"github.com/kdimtriCP/gh-inspector/internal/metrics"
 	"github.com/olekukonko/tablewriter"
-	"github.com/yourname/gh-inspector/internal/github"
 )
 
 type TableFormatter struct{}
@@ -13,7 +13,7 @@ func NewTableFormatter() *TableFormatter {
 	return &TableFormatter{}
 }
 
-func (f *TableFormatter) Format(writer io.Writer, metrics []*github.RepoMetrics) error {
+func (f *TableFormatter) Format(writer io.Writer, metricsData []*metrics.Repository) error {
 	table := tablewriter.NewWriter(writer)
 	table.SetHeader(GetRecordHeaders())
 
@@ -24,7 +24,7 @@ func (f *TableFormatter) Format(writer io.Writer, metrics []*github.RepoMetrics)
 	table.SetHeaderAlignment(tablewriter.ALIGN_LEFT)
 	table.SetAlignment(tablewriter.ALIGN_LEFT)
 
-	for _, m := range metrics {
+	for _, m := range metricsData {
 		raw := MetricsToRecord(m).Strings()
 		table.Append(raw)
 	}

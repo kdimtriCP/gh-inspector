@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"io"
 
-	"github.com/yourname/gh-inspector/internal/github"
+	"github.com/kdimtriCP/gh-inspector/internal/metrics"
 )
 
 type CSVFormatter struct{}
@@ -14,7 +14,7 @@ func NewCSVFormatter() *CSVFormatter {
 	return &CSVFormatter{}
 }
 
-func (f *CSVFormatter) Format(writer io.Writer, metrics []*github.RepoMetrics) error {
+func (f *CSVFormatter) Format(writer io.Writer, metricsData []*metrics.Repository) error {
 	w := csv.NewWriter(writer)
 	defer w.Flush()
 
@@ -23,7 +23,7 @@ func (f *CSVFormatter) Format(writer io.Writer, metrics []*github.RepoMetrics) e
 		return err
 	}
 
-	for _, m := range metrics {
+	for _, m := range metricsData {
 		record := MetricsToRecord(m)
 		row := []string{
 			record.Repository,

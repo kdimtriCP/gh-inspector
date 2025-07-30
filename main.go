@@ -1,6 +1,6 @@
 package main
 
-import "github.com/yourname/gh-inspector/cmd"
+import "github.com/kdimtriCP/gh-inspector/cmd"
 
 func main() {
 	cmd.Execute()

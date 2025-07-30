@@ -5,7 +5,7 @@ import (
 	"time"
 )
 
-type RepoMetrics interface {
+type RepositoryMetrics interface {
 	GetStars() int
 	GetForks() int
 	GetOpenIssues() int
@@ -28,7 +28,7 @@ func NewScorer(config *Config) *Scorer {
 	return &Scorer{config: config}
 }
 
-func (s *Scorer) Score(metrics RepoMetrics) float64 {
+func (s *Scorer) Score(metrics RepositoryMetrics) float64 {
 	if metrics.GetIsArchived() {
 		return 0.0
 	}

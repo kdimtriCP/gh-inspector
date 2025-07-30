@@ -4,7 +4,7 @@ import (
 	"encoding/json"
 	"io"
 
-	"github.com/yourname/gh-inspector/internal/github"
+	"github.com/kdimtriCP/gh-inspector/internal/metrics"
 )
 
 type JSONFormatter struct {
@@ -15,9 +15,9 @@ func NewJSONFormatter(indent bool) *JSONFormatter {
 	return &JSONFormatter{indent: indent}
 }
 
-func (f *JSONFormatter) Format(writer io.Writer, metrics []*github.RepoMetrics) error {
+func (f *JSONFormatter) Format(writer io.Writer, metricsData []*metrics.Repository) error {
 	var records []*Record
-	for _, m := range metrics {
+	for _, m := range metricsData {
 		records = append(records, MetricsToRecord(m))
 	}
 

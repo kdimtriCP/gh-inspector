@@ -8,9 +8,10 @@ import (
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
 
-	"github.com/yourname/gh-inspector/internal/formatter"
-	"github.com/yourname/gh-inspector/internal/github"
-	"github.com/yourname/gh-inspector/internal/scoring"
+	"github.com/kdimtriCP/gh-inspector/internal/formatter"
+	"github.com/kdimtriCP/gh-inspector/internal/github"
+	"github.com/kdimtriCP/gh-inspector/internal/metrics"
+	"github.com/kdimtriCP/gh-inspector/internal/scoring"
 )
 
 var repos []string
@@ -35,7 +36,7 @@ var scoreCmd = &cobra.Command{
 		analyzer := github.NewRepoAnalyzer(token, scoringConfig)
 		ctx := context.Background()
 
-		var allMetrics []*github.RepoMetrics
+		var allMetrics []*metrics.Repository
 
 		for _, repo := range repos {
 			metrics, err := analyzer.Analyze(ctx, repo)
