@@ -70,7 +70,7 @@ func (c *Client) CollectBasicMetrics(ctx context.Context, repoFullName string) (
 			entryLower == metrics.CIJenkins {
 			result.HasCICD = true
 		}
-		if entryLower == metrics.FileContributing || entryLower == metrics.FileContributingAlt {
+		if strings.HasPrefix(entryLower, metrics.FileContributingAlt) {
 			result.HasContributing = true
 		}
 	}
