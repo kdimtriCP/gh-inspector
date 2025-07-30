@@ -3,6 +3,7 @@ package cmd
 import (
 	"context"
 	"fmt"
+	"github.com/yourname/gh-inspector/internal/github"
 	"os"
 	"text/tabwriter"
 	"time"
@@ -26,7 +27,7 @@ var scoreCmd = &cobra.Command{
 			return fmt.Errorf("GitHub token not configured")
 		}
 
-		analyzer := NewRepoAnalyzer(token)
+		analyzer := github.NewRepoAnalyzer(token)
 		ctx := context.Background()
 
 		w := tabwriter.NewWriter(os.Stdout, 0, 0, 3, ' ', 0)

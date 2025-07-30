@@ -1,23 +1,21 @@
-package cmd
+package github
 
 import (
 	"context"
 	"fmt"
-
-	"github.com/yourname/gh-inspector/internal/github"
 )
 
 type RepoAnalyzer struct {
-	client *github.Client
+	client *Client
 }
 
 func NewRepoAnalyzer(token string) *RepoAnalyzer {
 	return &RepoAnalyzer{
-		client: github.NewClient(token),
+		client: NewClient(token),
 	}
 }
 
-func (ra *RepoAnalyzer) Analyze(ctx context.Context, repo string) (*github.RepoMetrics, error) {
+func (ra *RepoAnalyzer) Analyze(ctx context.Context, repo string) (*RepoMetrics, error) {
 	metrics, err := ra.client.CollectBasicMetrics(ctx, repo)
 	if err != nil {
 		return nil, fmt.Errorf("failed to collect metrics for %s: %w", repo, err)
