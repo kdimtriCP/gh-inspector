@@ -75,6 +75,11 @@ func (c *Client) CollectBasicMetrics(ctx context.Context, repoFullName string) (
 		}
 	}
 
+	result.ReleaseCount = int(repo.Releases.TotalCount)
+	if len(repo.Releases.Edges) > 0 {
+		result.LastReleaseDate = repo.Releases.Edges[0].Node.PublishedAt.Time
+	}
+
 	if c.cache != nil {
 		cacheKey := cache.GenerateKey("repo", repoFullName)
 		if data, err := json.Marshal(result); err == nil {

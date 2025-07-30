@@ -17,6 +17,8 @@ type RepositoryMetrics interface {
 	GetHasLicense() bool
 	GetHasCICD() bool
 	GetHasContributing() bool
+	GetReleaseCount() int
+	GetLastReleaseDate() time.Time
 }
 
 type Scorer struct {
@@ -63,6 +65,9 @@ func (s *Scorer) Score(metrics RepositoryMetrics) float64 {
 		score += weights.HasContributing
 	}
 
+	releaseScore := s.calculateReleaseFrequencyScore(metrics.GetReleaseCount(), metrics.GetLastReleaseDate())
+	score += releaseScore * weights.ReleaseFrequency
+
 	// Normalize to 0-100 scale
 	return math.Min(score*100, 100)
 }
@@ -106,4 +111,34 @@ func (s *Scorer) calculatePRsScore(openPRs int) float64 {
 
 	prRatio := float64(openPRs)
 	return math.Max(0, 1.0-math.Log10(prRatio+1)/4.0)
+}
+
+func (s *Scorer) calculateReleaseFrequencyScore(releaseCount int, lastReleaseDate time.Time) float64 {
+	if releaseCount == 0 {
+		return 0.0
+	}
+
+	if lastReleaseDate.IsZero() {
+		return 0.0
+	}
+
+	daysSinceRelease := time.Since(lastReleaseDate).Hours() / 24
+
+	var recencyScore float64
+	switch {
+	case daysSinceRelease <= 30:
+		recencyScore = 1.0
+	case daysSinceRelease <= 90:
+		recencyScore = 0.8
+	case daysSinceRelease <= 180:
+		recencyScore = 0.6
+	case daysSinceRelease <= 365:
+		recencyScore = 0.4
+	default:
+		recencyScore = 0.2
+	}
+
+	frequencyScore := math.Min(float64(releaseCount)/10.0, 1.0)
+
+	return (recencyScore + frequencyScore) / 2.0
 }

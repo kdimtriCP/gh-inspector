@@ -26,8 +26,8 @@ func (f *TableFormatter) Format(writer io.Writer, metricsData []*metrics.Reposit
 	table.SetAlignment(tablewriter.ALIGN_LEFT)
 
 	for _, m := range metricsData {
-		raw := MetricsToRecord(m).Strings()
-		table.Append(raw)
+		row := MetricsToRecord(m).Strings()
+		table.Append(row)
 	}
 
 	table.Render()

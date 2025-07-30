@@ -16,18 +16,22 @@ type Repository struct {
 	HasCICD         bool
 	HasLicense      bool
 	HasContributing bool
+	ReleaseCount    int
+	LastReleaseDate time.Time
 	Score           float64
 }
 
-func (m *Repository) GetStars() int                { return m.Stars }
-func (m *Repository) GetForks() int                { return m.Forks }
-func (m *Repository) GetOpenIssues() int           { return m.OpenIssues }
-func (m *Repository) GetOpenPRs() int              { return m.OpenPRs }
-func (m *Repository) GetLastCommitDate() time.Time { return m.LastCommitDate }
-func (m *Repository) GetIsArchived() bool          { return m.IsArchived }
-func (m *Repository) GetHasLicense() bool          { return m.HasLicense }
-func (m *Repository) GetHasCICD() bool             { return m.HasCICD }
-func (m *Repository) GetHasContributing() bool     { return m.HasContributing }
+func (m *Repository) GetStars() int                 { return m.Stars }
+func (m *Repository) GetForks() int                 { return m.Forks }
+func (m *Repository) GetOpenIssues() int            { return m.OpenIssues }
+func (m *Repository) GetOpenPRs() int               { return m.OpenPRs }
+func (m *Repository) GetLastCommitDate() time.Time  { return m.LastCommitDate }
+func (m *Repository) GetIsArchived() bool           { return m.IsArchived }
+func (m *Repository) GetHasLicense() bool           { return m.HasLicense }
+func (m *Repository) GetHasCICD() bool              { return m.HasCICD }
+func (m *Repository) GetHasContributing() bool      { return m.HasContributing }
+func (m *Repository) GetReleaseCount() int          { return m.ReleaseCount }
+func (m *Repository) GetLastReleaseDate() time.Time { return m.LastReleaseDate }
 
 func (m *Repository) DaysSinceLastCommit() int {
 	if m.LastCommitDate.IsZero() {

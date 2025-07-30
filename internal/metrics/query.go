@@ -58,6 +58,19 @@ type TreeObject struct {
 	Tree Tree `graphql:"... on Tree"`
 }
 
+type ReleaseNode struct {
+	PublishedAt githubv4.DateTime
+}
+
+type ReleaseEdge struct {
+	Node ReleaseNode
+}
+
+type ReleasesConnection struct {
+	TotalCount githubv4.Int
+	Edges      []ReleaseEdge
+}
+
 type RepositoryGraphQL struct {
 	Owner            Owner
 	Name             githubv4.String
@@ -70,7 +83,8 @@ type RepositoryGraphQL struct {
 	PullRequests     PullRequestsConnection `graphql:"pullRequests(states: OPEN)"`
 	DefaultBranchRef *Ref
 	LicenseInfo      *License
-	Object           TreeObject `graphql:"object(expression: \"HEAD:\")"`
+	Object           TreeObject         `graphql:"object(expression: \"HEAD:\")"`
+	Releases         ReleasesConnection `graphql:"releases(first: 10, orderBy: {field: CREATED_AT, direction: DESC})"`
 }
 
 type RepositoryQuery struct {

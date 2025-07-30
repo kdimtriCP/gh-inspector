@@ -118,6 +118,20 @@ func (mr *MockRepositoryMetricsMockRecorder) GetLastCommitDate() *gomock.Call {
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetLastCommitDate", reflect.TypeOf((*MockRepositoryMetrics)(nil).GetLastCommitDate))
 }
 
+// GetLastReleaseDate mocks base method.
+func (m *MockRepositoryMetrics) GetLastReleaseDate() time.Time {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "GetLastReleaseDate")
+	ret0, _ := ret[0].(time.Time)
+	return ret0
+}
+
+// GetLastReleaseDate indicates an expected call of GetLastReleaseDate.
+func (mr *MockRepositoryMetricsMockRecorder) GetLastReleaseDate() *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetLastReleaseDate", reflect.TypeOf((*MockRepositoryMetrics)(nil).GetLastReleaseDate))
+}
+
 // GetOpenIssues mocks base method.
 func (m *MockRepositoryMetrics) GetOpenIssues() int {
 	m.ctrl.T.Helper()
@@ -144,6 +158,20 @@ func (m *MockRepositoryMetrics) GetOpenPRs() int {
 func (mr *MockRepositoryMetricsMockRecorder) GetOpenPRs() *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetOpenPRs", reflect.TypeOf((*MockRepositoryMetrics)(nil).GetOpenPRs))
+}
+
+// GetReleaseCount mocks base method.
+func (m *MockRepositoryMetrics) GetReleaseCount() int {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "GetReleaseCount")
+	ret0, _ := ret[0].(int)
+	return ret0
+}
+
+// GetReleaseCount indicates an expected call of GetReleaseCount.
+func (mr *MockRepositoryMetricsMockRecorder) GetReleaseCount() *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetReleaseCount", reflect.TypeOf((*MockRepositoryMetrics)(nil).GetReleaseCount))
 }
 
 // GetStars mocks base method.

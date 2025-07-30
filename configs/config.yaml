@@ -7,11 +7,12 @@ cache:
 
 scoring:
   weights:
-    stars: 0.30
-    forks: 0.15
-    recent_activity: 0.25
+    stars: 0.25
+    forks: 0.10
+    recent_activity: 0.20
     open_issues: 0.10
     open_prs: 0.05
     has_license: 0.05
     has_cicd: 0.05
     has_contributing: 0.05
+    release_frequency: 0.15

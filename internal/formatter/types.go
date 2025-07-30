@@ -2,7 +2,6 @@ package formatter
 
 import (
 	"fmt"
-	"reflect"
 	"time"
 
 	"github.com/kdimtriCP/gh-inspector/internal/metrics"
@@ -23,6 +22,8 @@ type Record struct {
 	OpenIssues  int     `json:"open_issues"`
 	OpenPRs     int     `json:"open_prs"`
 	LastCommit  string  `json:"last_commit"`
+	Releases    int     `json:"releases"`
+	LastRelease string  `json:"last_release"`
 	Language    string  `json:"language"`
 	CICD        string  `json:"ci_cd"`
 	License     string  `json:"license"`
@@ -57,6 +58,12 @@ func MetricsToRecord(m *metrics.Repository) *Record {
 		archived = "Yes"
 	}
 
+	lastRelease := "Never"
+	if !m.LastReleaseDate.IsZero() {
+		daysAgo := int(time.Since(m.LastReleaseDate).Hours() / 24)
+		lastRelease = fmt.Sprintf("%d days ago", daysAgo)
+	}
+
 	return &Record{
 		Repository:  fmt.Sprintf("%s/%s", m.Owner, m.Name),
 		Score:       m.Score,
@@ -65,6 +72,8 @@ func MetricsToRecord(m *metrics.Repository) *Record {
 		OpenIssues:  m.OpenIssues,
 		OpenPRs:     m.OpenPRs,
 		LastCommit:  lastCommit,
+		Releases:    m.ReleaseCount,
+		LastRelease: lastRelease,
 		Language:    lang,
 		CICD:        cicd,
 		License:     license,
@@ -75,7 +84,7 @@ func MetricsToRecord(m *metrics.Repository) *Record {
 
 func (r *Record) String() string {
 	return fmt.Sprintf(
-		"Repository: %s, Score: %.1f, Stars: %d, Forks: %d, Open Issues: %d, Open PRs: %d, Last Commit: %s, Language: %s, CI/CD: %s, License: %s, Description: %s, Archived: %s",
+		"Repository: %s, Score: %.1f, Stars: %d, Forks: %d, Open Issues: %d, Open PRs: %d, Last Commit: %s, Releases: %d, Last Release: %s, Language: %s, CI/CD: %s, License: %s, Description: %s, Archived: %s",
 		r.Repository,
 		r.Score,
 		r.Stars,
@@ -83,6 +92,8 @@ func (r *Record) String() string {
 		r.OpenIssues,
 		r.OpenPRs,
 		r.LastCommit,
+		r.Releases,
+		r.LastRelease,
 		r.Language,
 		r.CICD,
 		r.License,
@@ -100,6 +111,8 @@ func (r *Record) Strings() []string {
 		fmt.Sprintf("%d", r.OpenIssues),
 		fmt.Sprintf("%d", r.OpenPRs),
 		r.LastCommit,
+		fmt.Sprintf("%d", r.Releases),
+		r.LastRelease,
 		r.Language,
 		r.CICD,
 		r.License,
@@ -109,17 +122,20 @@ func (r *Record) Strings() []string {
 }
 
 func GetRecordHeaders() []string {
-	record := Record{}
-	t := reflect.TypeOf(record)
-	headers := make([]string, 0, t.NumField())
-
-	for i := 0; i < t.NumField(); i++ {
-		field := t.Field(i)
-		jsonTag := field.Tag.Get("json")
-		if jsonTag != "" && jsonTag != "-" {
-			headers = append(headers, jsonTag)
-		}
+	return []string{
+		"Repository",
+		"Score",
+		"Stars",
+		"Forks",
+		"Open Issues",
+		"Open PRs",
+		"Last Commit",
+		"Releases",
+		"Last Release",
+		"Language",
+		"CI/CD",
+		"License",
+		"Description",
+		"Archived",
 	}
-
-	return headers
 }

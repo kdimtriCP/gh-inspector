@@ -151,13 +151,16 @@ func TestCSVFormatter(t *testing.T) {
 			Forks:           10,
 			OpenIssues:      5,
 			OpenPRs:         2,
-			Score:           85.5,
-			PrimaryLanguage: "Go",
-			HasLicense:      true,
-			HasCICD:         true,
-			HasContributing: false,
+			LastCommitDate:  time.Time{},
 			Description:     "Test repository with, comma",
+			PrimaryLanguage: "Go",
 			IsArchived:      false,
+			HasCICD:         true,
+			HasLicense:      true,
+			HasContributing: false,
+			ReleaseCount:    10,
+			LastReleaseDate: time.Now().AddDate(0, -1, 0),
+			Score:           85.5,
 		},
 	}
 
@@ -172,20 +175,7 @@ func TestCSVFormatter(t *testing.T) {
 	require.GreaterOrEqual(t, len(lines), 2, "CSV output should have at least header and one data row")
 
 	header := lines[0]
-	expectedHeaders := []string{
-		"repository",
-		"score",
-		"stars",
-		"forks",
-		"open_issues",
-		"open_prs",
-		"last_commit",
-		"language",
-		"ci_cd",
-		"license",
-		"description",
-		"archived",
-	}
+	expectedHeaders := GetRecordHeaders()
 
 	for _, h := range expectedHeaders {
 		require.Contains(t, header, h, "CSV header missing expected column")

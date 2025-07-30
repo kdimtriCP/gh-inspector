@@ -58,6 +58,8 @@ func TestScore(t *testing.T) {
 				m.EXPECT().GetHasLicense().Return(true)
 				m.EXPECT().GetHasCICD().Return(true)
 				m.EXPECT().GetHasContributing().Return(true)
+				m.EXPECT().GetReleaseCount().Return(20)
+				m.EXPECT().GetLastReleaseDate().Return(time.Now().AddDate(0, 0, -7))
 			},
 			wantMin: 85.0,
 			wantMax: 100.0,
@@ -74,6 +76,8 @@ func TestScore(t *testing.T) {
 				m.EXPECT().GetHasLicense().Return(false)
 				m.EXPECT().GetHasCICD().Return(false)
 				m.EXPECT().GetHasContributing().Return(false)
+				m.EXPECT().GetReleaseCount().Return(0)
+				m.EXPECT().GetLastReleaseDate().Return(time.Time{})
 			},
 			wantMin: 0.0,
 			wantMax: 30.0,
@@ -90,6 +94,8 @@ func TestScore(t *testing.T) {
 				m.EXPECT().GetHasLicense().Return(true)
 				m.EXPECT().GetHasCICD().Return(true)
 				m.EXPECT().GetHasContributing().Return(false)
+				m.EXPECT().GetReleaseCount().Return(5)
+				m.EXPECT().GetLastReleaseDate().Return(time.Now().AddDate(0, -2, 0))
 			},
 			wantMin: 40.0,
 			wantMax: 70.0,
@@ -215,6 +221,31 @@ func TestCalculatePRsScore(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			got := scorer.calculatePRsScore(tt.openPRs)
+			require.Equal(t, tt.want, got)
+		})
+	}
+}
+
+func TestCalculateReleaseFrequencyScore(t *testing.T) {
+	scorer := NewScorer(DefaultConfig())
+
+	tests := []struct {
+		name            string
+		releaseCount    int
+		lastReleaseDate time.Time
+		want            float64
+	}{
+		{name: "no releases", releaseCount: 0, lastReleaseDate: time.Now(), want: 0.0},
+		{name: "zero time", releaseCount: 5, lastReleaseDate: time.Time{}, want: 0.0},
+		{name: "recent release, few count", releaseCount: 3, lastReleaseDate: time.Now().AddDate(0, 0, -15), want: (1.0 + 0.3) / 2.0},
+		{name: "recent release, many count", releaseCount: 15, lastReleaseDate: time.Now().AddDate(0, 0, -20), want: (1.0 + 1.0) / 2.0},
+		{name: "old release, many count", releaseCount: 20, lastReleaseDate: time.Now().AddDate(0, -6, 0), want: (0.4 + 1.0) / 2.0},
+		{name: "very old release", releaseCount: 5, lastReleaseDate: time.Now().AddDate(-2, 0, 0), want: (0.2 + 0.5) / 2.0},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			got := scorer.calculateReleaseFrequencyScore(tt.releaseCount, tt.lastReleaseDate)
 			require.Equal(t, tt.want, got)
 		})
 	}

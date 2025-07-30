@@ -2,7 +2,6 @@ package formatter
 
 import (
 	"encoding/csv"
-	"fmt"
 	"io"
 
 	"github.com/kdimtriCP/gh-inspector/internal/metrics"
@@ -24,21 +23,7 @@ func (f *CSVFormatter) Format(writer io.Writer, metricsData []*metrics.Repositor
 	}
 
 	for _, m := range metricsData {
-		record := MetricsToRecord(m)
-		row := []string{
-			record.Repository,
-			fmt.Sprintf("%.1f", record.Score),
-			fmt.Sprintf("%d", record.Stars),
-			fmt.Sprintf("%d", record.Forks),
-			fmt.Sprintf("%d", record.OpenIssues),
-			fmt.Sprintf("%d", record.OpenPRs),
-			record.LastCommit,
-			record.Language,
-			record.CICD,
-			record.License,
-			record.Description,
-			record.Archived,
-		}
+		row := MetricsToRecord(m).Strings()
 		if err := w.Write(row); err != nil {
 			return err
 		}
