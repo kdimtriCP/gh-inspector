@@ -6,7 +6,7 @@ import (
 
 	"github.com/golang/mock/gomock"
 	"github.com/stretchr/testify/require"
-	
+
 	"github.com/kdimtriCP/gh-inspector/internal/mock/mock_cache"
 )
 
@@ -28,15 +28,15 @@ func TestClientSetCache(t *testing.T) {
 	mockCache := mock_cache.NewMockCache(ctrl)
 
 	client.SetCache(mockCache)
-	
+
 	require.Equal(t, mockCache, client.cache)
 }
 
 func TestClientSetCacheTTL(t *testing.T) {
 	client := NewClient("test-token")
-	
+
 	newTTL := 30 * time.Minute
 	client.SetCacheTTL(newTTL)
-	
+
 	require.Equal(t, newTTL, client.cacheTTL)
 }

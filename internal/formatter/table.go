@@ -3,8 +3,9 @@ package formatter
 import (
 	"io"
 
-	"github.com/kdimtriCP/gh-inspector/internal/metrics"
 	"github.com/olekukonko/tablewriter"
+
+	"github.com/kdimtriCP/gh-inspector/internal/metrics"
 )
 
 type TableFormatter struct{}

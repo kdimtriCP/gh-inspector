@@ -4,9 +4,10 @@ import (
 	"context"
 	"time"
 
-	"github.com/kdimtriCP/gh-inspector/internal/cache"
 	"github.com/shurcooL/githubv4"
 	"golang.org/x/oauth2"
+
+	"github.com/kdimtriCP/gh-inspector/internal/cache"
 )
 
 type Client struct {

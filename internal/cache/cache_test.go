@@ -36,7 +36,7 @@ func TestGenerateKey(t *testing.T) {
 		t.Run(tt.name, func(t *testing.T) {
 			got := GenerateKey(tt.parts...)
 			require.Len(t, got, 64, "GenerateKey() should return 64 character hash")
-			
+
 			got2 := GenerateKey(tt.parts...)
 			require.Equal(t, got, got2, "GenerateKey() should be deterministic")
 		})
@@ -70,13 +70,16 @@ func TestNew(t *testing.T) {
 			}
 			require.NoError(t, err)
 			require.NotNil(t, cache)
-			defer cache.Close()
-			
+			defer func() {
+				err := cache.Close()
+				require.NoError(t, err)
+			}()
+
 			expectedDir := tt.cacheDir
 			if expectedDir == "" {
 				expectedDir = ".gh-inspector-cache"
 			}
-			
+
 			_, err = os.Stat(expectedDir)
 			require.NoError(t, err, "New() should create cache directory")
 		})
@@ -87,7 +90,10 @@ func TestSQLiteCache(t *testing.T) {
 	tempDir := t.TempDir()
 	cache, err := NewSQLiteCache(filepath.Join(tempDir, "test.db"))
 	require.NoError(t, err)
-	defer cache.Close()
+	defer func() {
+		err := cache.Close()
+		require.NoError(t, err)
+	}()
 
 	t.Run("Set and Get", func(t *testing.T) {
 		key := "test-key"
@@ -111,7 +117,7 @@ func TestSQLiteCache(t *testing.T) {
 
 	t.Run("Expired entry", func(t *testing.T) {
 		t.Skip("Skipping flaky expiry test - timing issues in CI")
-		
+
 		key := "expired-key"
 		value := []byte("expired-value")
 		ttl := 50 * time.Millisecond

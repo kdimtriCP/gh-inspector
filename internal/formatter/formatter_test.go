@@ -8,7 +8,7 @@ import (
 	"time"
 
 	"github.com/stretchr/testify/require"
-	
+
 	"github.com/kdimtriCP/gh-inspector/internal/metrics"
 )
 
@@ -77,7 +77,7 @@ func TestTableFormatter(t *testing.T) {
 	require.NoError(t, err)
 
 	output := buf.String()
-	
+
 	expectedContents := []string{
 		"REPOSITORY",
 		"SCORE",
@@ -168,7 +168,7 @@ func TestCSVFormatter(t *testing.T) {
 
 	output := buf.String()
 	lines := strings.Split(strings.TrimSpace(output), "\n")
-	
+
 	require.GreaterOrEqual(t, len(lines), 2, "CSV output should have at least header and one data row")
 
 	header := lines[0]

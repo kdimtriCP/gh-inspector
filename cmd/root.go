@@ -1,8 +1,9 @@
 package cmd
 
 import (
-	"github.com/joho/godotenv"
+	"fmt"
 
+	"github.com/joho/godotenv"
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
 )
@@ -20,7 +21,9 @@ func Execute() {
 func init() {
 	cobra.OnInitialize(initConfig)
 	rootCmd.PersistentFlags().String("config", "", "config file (default is ./configs/config.yaml)")
-	_ = viper.BindPFlag("config", rootCmd.PersistentFlags().Lookup("config"))
+	if err := viper.BindPFlag("config", rootCmd.PersistentFlags().Lookup("config")); err != nil {
+		fmt.Printf("Error binding config flag: %v\n", err)
+	}
 }
 
 func initConfig() {

@@ -25,7 +25,9 @@ func NewSQLiteCache(dbPath string) (*SQLiteCache, error) {
 
 	cache := &SQLiteCache{db: db}
 	if err := cache.createTable(); err != nil {
-		db.Close()
+		if closeErr := db.Close(); closeErr != nil {
+			return nil, fmt.Errorf("failed to create table: %w (also failed to close db: %v)", err, closeErr)
+		}
 		return nil, fmt.Errorf("failed to create table: %w", err)
 	}
 

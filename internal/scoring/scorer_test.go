@@ -6,7 +6,7 @@ import (
 
 	"github.com/golang/mock/gomock"
 	"github.com/stretchr/testify/require"
-	
+
 	"github.com/kdimtriCP/gh-inspector/internal/mock/mock_scoring"
 )
 
@@ -32,10 +32,10 @@ func TestScore(t *testing.T) {
 	scorer := NewScorer(DefaultConfig())
 
 	tests := []struct {
-		name        string
-		setupMock   func(*mock_scoring.MockRepositoryMetrics)
-		wantMin     float64
-		wantMax     float64
+		name      string
+		setupMock func(*mock_scoring.MockRepositoryMetrics)
+		wantMin   float64
+		wantMax   float64
 	}{
 		{
 			name: "archived repository",

@@ -6,9 +6,10 @@ import (
 	"fmt"
 	"strings"
 
+	"github.com/shurcooL/githubv4"
+
 	"github.com/kdimtriCP/gh-inspector/internal/cache"
 	"github.com/kdimtriCP/gh-inspector/internal/metrics"
-	"github.com/shurcooL/githubv4"
 )
 
 func (c *Client) CollectBasicMetrics(ctx context.Context, repoFullName string) (*metrics.Repository, error) {

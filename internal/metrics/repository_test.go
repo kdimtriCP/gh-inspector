@@ -95,7 +95,7 @@ func TestDaysSinceLastCommit(t *testing.T) {
 		{
 			name:           "commit last month",
 			lastCommitDate: time.Now().AddDate(0, -1, 0),
-			wantDays:       30, 
+			wantDays:       30,
 		},
 		{
 			name:           "zero time",
@@ -108,7 +108,7 @@ func TestDaysSinceLastCommit(t *testing.T) {
 		t.Run(tt.name, func(t *testing.T) {
 			repo := &Repository{LastCommitDate: tt.lastCommitDate}
 			got := repo.DaysSinceLastCommit()
-			
+
 			if tt.lastCommitDate.IsZero() {
 				require.Equal(t, -1, got, "DaysSinceLastCommit() should return -1 for zero time")
 			} else {

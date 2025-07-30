@@ -36,7 +36,9 @@ var scoreCmd = &cobra.Command{
 		}
 
 		scoringConfig := &scoring.Config{}
-		_ = viper.UnmarshalKey("scoring", scoringConfig)
+		if err := viper.UnmarshalKey("scoring", scoringConfig); err != nil {
+			scoringConfig = scoring.DefaultConfig()
+		}
 
 		analyzer := github.NewRepoAnalyzer(token, scoringConfig)
 		ctx := context.Background()
@@ -48,7 +50,11 @@ var scoreCmd = &cobra.Command{
 				fmt.Fprintf(os.Stderr, "Warning: failed to initialize cache: %v\n", err)
 			} else {
 				analyzer.SetCache(c)
-				defer c.Close()
+				defer func() {
+					if err := c.Close(); err != nil {
+						fmt.Fprintf(os.Stderr, "Warning: failed to close cache: %v\n", err)
+					}
+				}()
 
 				cacheTTL := viper.GetInt("cache.ttl")
 				if cacheTTL > 0 {
