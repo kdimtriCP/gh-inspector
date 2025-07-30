@@ -1,6 +1,7 @@
 package scoring
 
 import (
+	"math"
 	"testing"
 	"time"
 
@@ -58,7 +59,7 @@ func TestScore(t *testing.T) {
 				m.EXPECT().GetHasCICD().Return(true)
 				m.EXPECT().GetHasContributing().Return(true)
 			},
-			wantMin: 90.0,
+			wantMin: 85.0,
 			wantMax: 100.0,
 		},
 		{
@@ -179,12 +180,12 @@ func TestCalculateIssuesScore(t *testing.T) {
 		want       float64
 	}{
 		{name: "0 issues", openIssues: 0, want: 1.0},
-		{name: "3 issues", openIssues: 3, want: 0.9},
-		{name: "8 issues", openIssues: 8, want: 0.7},
-		{name: "15 issues", openIssues: 15, want: 0.5},
-		{name: "35 issues", openIssues: 35, want: 0.3},
-		{name: "75 issues", openIssues: 75, want: 0.1},
-		{name: "200 issues", openIssues: 200, want: 0.0},
+		{name: "3 issues", openIssues: 3, want: 1.0 - math.Log10(4)/5.0},       // ~0.8796
+		{name: "8 issues", openIssues: 8, want: 1.0 - math.Log10(9)/5.0},       // ~0.8092
+		{name: "15 issues", openIssues: 15, want: 1.0 - math.Log10(16)/5.0},    // ~0.7592
+		{name: "35 issues", openIssues: 35, want: 1.0 - math.Log10(36)/5.0},    // ~0.6887
+		{name: "75 issues", openIssues: 75, want: 1.0 - math.Log10(76)/5.0},    // ~0.6238
+		{name: "200 issues", openIssues: 200, want: 1.0 - math.Log10(201)/5.0}, // ~0.5394
 	}
 
 	for _, tt := range tests {
@@ -204,11 +205,11 @@ func TestCalculatePRsScore(t *testing.T) {
 		want    float64
 	}{
 		{name: "0 PRs", openPRs: 0, want: 1.0},
-		{name: "2 PRs", openPRs: 2, want: 0.8},
-		{name: "4 PRs", openPRs: 4, want: 0.6},
-		{name: "7 PRs", openPRs: 7, want: 0.4},
-		{name: "15 PRs", openPRs: 15, want: 0.2},
-		{name: "30 PRs", openPRs: 30, want: 0.0},
+		{name: "2 PRs", openPRs: 2, want: 1.0 - math.Log10(3)/4.0},    // ~0.8807
+		{name: "4 PRs", openPRs: 4, want: 1.0 - math.Log10(5)/4.0},    // ~0.8253
+		{name: "7 PRs", openPRs: 7, want: 1.0 - math.Log10(8)/4.0},    // ~0.7742
+		{name: "15 PRs", openPRs: 15, want: 1.0 - math.Log10(16)/4.0}, // ~0.6990
+		{name: "30 PRs", openPRs: 30, want: 1.0 - math.Log10(31)/4.0}, // ~0.6272
 	}
 
 	for _, tt := range tests {
