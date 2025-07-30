@@ -1,5 +1,10 @@
 github_token: "ghp_yourtokenhere"
 output_format: "table"
+cache:
+  enabled: true
+  ttl: 3600  # 1 hour
+  directory: ""  # empty means use default .gh-inspector-cache in current directory
+
 scoring:
   weights:
     stars: 0.30

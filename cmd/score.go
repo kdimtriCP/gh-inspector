@@ -4,18 +4,23 @@ import (
 	"context"
 	"fmt"
 	"os"
+	"time"
 
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
 
+	"github.com/kdimtriCP/gh-inspector/internal/cache"
 	"github.com/kdimtriCP/gh-inspector/internal/formatter"
 	"github.com/kdimtriCP/gh-inspector/internal/github"
 	"github.com/kdimtriCP/gh-inspector/internal/metrics"
 	"github.com/kdimtriCP/gh-inspector/internal/scoring"
 )
 
-var repos []string
-var outputFormat string
+var (
+	repos        []string
+	outputFormat string
+	noCache      bool
+)
 
 var scoreCmd = &cobra.Command{
 	Use:   "score",
@@ -35,6 +40,23 @@ var scoreCmd = &cobra.Command{
 
 		analyzer := github.NewRepoAnalyzer(token, scoringConfig)
 		ctx := context.Background()
+
+		if viper.GetBool("cache.enabled") && !noCache {
+			cacheDir := viper.GetString("cache.directory")
+			c, err := cache.New(cacheDir)
+			if err != nil {
+				fmt.Fprintf(os.Stderr, "Warning: failed to initialize cache: %v\n", err)
+			} else {
+				analyzer.SetCache(c)
+				defer c.Close()
+
+				cacheTTL := viper.GetInt("cache.ttl")
+				if cacheTTL > 0 {
+					ttlDuration := time.Duration(cacheTTL) * time.Second
+					analyzer.SetCacheTTL(ttlDuration)
+				}
+			}
+		}
 
 		var allMetrics []*metrics.Repository
 
@@ -72,4 +94,5 @@ func init() {
 	rootCmd.AddCommand(scoreCmd)
 	scoreCmd.Flags().StringSliceVarP(&repos, "repos", "r", []string{}, "List of GitHub repositories")
 	scoreCmd.Flags().StringVarP(&outputFormat, "output", "o", "", "Output format (table, json, json-compact, csv)")
+	scoreCmd.Flags().BoolVar(&noCache, "no-cache", false, "Disable caching")
 }

@@ -2,13 +2,17 @@ package github
 
 import (
 	"context"
+	"time"
 
+	"github.com/kdimtriCP/gh-inspector/internal/cache"
 	"github.com/shurcooL/githubv4"
 	"golang.org/x/oauth2"
 )
 
 type Client struct {
 	graphqlClient *githubv4.Client
+	cache         cache.Cache
+	cacheTTL      time.Duration
 }
 
 func NewClient(token string) *Client {
@@ -19,5 +23,14 @@ func NewClient(token string) *Client {
 
 	return &Client{
 		graphqlClient: githubv4.NewClient(httpClient),
+		cacheTTL:      1 * time.Hour,
 	}
+}
+
+func (c *Client) SetCache(cache cache.Cache) {
+	c.cache = cache
+}
+
+func (c *Client) SetCacheTTL(ttl time.Duration) {
+	c.cacheTTL = ttl
 }

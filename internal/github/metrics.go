@@ -2,14 +2,26 @@ package github
 
 import (
 	"context"
+	"encoding/json"
 	"fmt"
 	"strings"
 
+	"github.com/kdimtriCP/gh-inspector/internal/cache"
 	"github.com/kdimtriCP/gh-inspector/internal/metrics"
 	"github.com/shurcooL/githubv4"
 )
 
 func (c *Client) CollectBasicMetrics(ctx context.Context, repoFullName string) (*metrics.Repository, error) {
+	if c.cache != nil {
+		cacheKey := cache.GenerateKey("repo", repoFullName)
+		if data, found, err := c.cache.Get(cacheKey); err == nil && found {
+			var result metrics.Repository
+			if err := json.Unmarshal(data, &result); err == nil {
+				return &result, nil
+			}
+		}
+	}
+
 	parts := strings.Split(repoFullName, "/")
 	if len(parts) != 2 {
 		return nil, fmt.Errorf("invalid repository format, expected owner/name")
@@ -59,6 +71,13 @@ func (c *Client) CollectBasicMetrics(ctx context.Context, repoFullName string) (
 		}
 		if entryLower == metrics.FileContributing || entryLower == metrics.FileContributingAlt {
 			result.HasContributing = true
+		}
+	}
+
+	if c.cache != nil {
+		cacheKey := cache.GenerateKey("repo", repoFullName)
+		if data, err := json.Marshal(result); err == nil {
+			_ = c.cache.Set(cacheKey, data, c.cacheTTL)
 		}
 	}
 
