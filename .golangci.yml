@@ -27,8 +27,6 @@ linters:
           - dupl
   
   settings:
-    govet:
-      check-shadowing: true
     revive:
       rules:
         - name: context-as-argument
@@ -56,4 +54,5 @@ formatters:
     gofmt:
       simplify: true
     goimports:
-      local-prefixes: github.com/kdimtriCP/gh-inspector
+      local-prefixes:
+        - github.com/kdimtriCP/gh-inspector
