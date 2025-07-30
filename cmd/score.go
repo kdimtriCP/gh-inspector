@@ -10,6 +10,7 @@ import (
 
 	"github.com/yourname/gh-inspector/internal/formatter"
 	"github.com/yourname/gh-inspector/internal/github"
+	"github.com/yourname/gh-inspector/internal/scoring"
 )
 
 var repos []string
@@ -28,7 +29,10 @@ var scoreCmd = &cobra.Command{
 			return fmt.Errorf("GitHub token not configured")
 		}
 
-		analyzer := github.NewRepoAnalyzer(token)
+		scoringConfig := &scoring.Config{}
+		viper.UnmarshalKey("scoring", scoringConfig)
+
+		analyzer := github.NewRepoAnalyzer(token, scoringConfig)
 		ctx := context.Background()
 
 		var allMetrics []*github.RepoMetrics

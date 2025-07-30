@@ -22,7 +22,18 @@ type RepoMetrics struct {
 	HasCICD         bool
 	HasLicense      bool
 	HasContributing bool
+	Score           float64
 }
+
+func (m *RepoMetrics) GetStars() int                { return m.Stars }
+func (m *RepoMetrics) GetForks() int                { return m.Forks }
+func (m *RepoMetrics) GetOpenIssues() int           { return m.OpenIssues }
+func (m *RepoMetrics) GetOpenPRs() int              { return m.OpenPRs }
+func (m *RepoMetrics) GetLastCommitDate() time.Time { return m.LastCommitDate }
+func (m *RepoMetrics) GetIsArchived() bool          { return m.IsArchived }
+func (m *RepoMetrics) GetHasLicense() bool          { return m.HasLicense }
+func (m *RepoMetrics) GetHasCICD() bool             { return m.HasCICD }
+func (m *RepoMetrics) GetHasContributing() bool     { return m.HasContributing }
 
 type repositoryData struct {
 	Repository struct {

@@ -16,19 +16,20 @@ func NewTableFormatter() *TableFormatter {
 
 func (f *TableFormatter) Format(writer io.Writer, metrics []*github.RepoMetrics) error {
 	w := tabwriter.NewWriter(writer, 0, 0, 3, ' ', 0)
-	_, err := fmt.Fprintln(w, "REPOSITORY\tSTARS\tFORKS\tOPEN ISSUES\tOPEN PRS\tLAST COMMIT\tLANGUAGE\tCI/CD\tLICENSE")
+	_, err := fmt.Fprintln(w, "REPOSITORY\tSCORE\tSTARS\tFORKS\tOPEN ISSUES\tOPEN PRS\tLAST COMMIT\tLANGUAGE\tCI/CD\tLICENSE")
 	if err != nil {
 		return err
 	}
-	_, err = fmt.Fprintln(w, "----------\t-----\t-----\t-----------\t--------\t-----------\t--------\t-----\t-------")
+	_, err = fmt.Fprintln(w, "----------\t-----\t-----\t-----\t-----------\t--------\t-----------\t--------\t-----\t-------")
 	if err != nil {
 		return err
 	}
 
 	for _, m := range metrics {
 		record := MetricsToRecord(m)
-		_, err = fmt.Fprintf(w, "%s\t%d\t%d\t%d\t%d\t%s\t%s\t%s\t%s\n",
+		_, err = fmt.Fprintf(w, "%s\t%.1f\t%d\t%d\t%d\t%d\t%s\t%s\t%s\t%s\n",
 			record.Repository,
+			record.Score,
 			record.Stars,
 			record.Forks,
 			record.OpenIssues,

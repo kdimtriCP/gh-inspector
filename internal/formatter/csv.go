@@ -20,6 +20,7 @@ func (f *CSVFormatter) Format(writer io.Writer, metrics []*github.RepoMetrics) e
 
 	headers := []string{
 		"Repository",
+		"Score",
 		"Stars",
 		"Forks",
 		"Open Issues",
@@ -39,6 +40,7 @@ func (f *CSVFormatter) Format(writer io.Writer, metrics []*github.RepoMetrics) e
 		record := MetricsToRecord(m)
 		row := []string{
 			record.Repository,
+			fmt.Sprintf("%.1f", record.Score),
 			fmt.Sprintf("%d", record.Stars),
 			fmt.Sprintf("%d", record.Forks),
 			fmt.Sprintf("%d", record.OpenIssues),

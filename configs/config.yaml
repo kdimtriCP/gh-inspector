@@ -1,2 +1,12 @@
 github_token: "ghp_yourtokenhere"
 output_format: "table"
+scoring:
+  weights:
+    stars: 0.30
+    forks: 0.15
+    recent_activity: 0.25
+    open_issues: 0.10
+    open_prs: 0.05
+    has_license: 0.05
+    has_cicd: 0.05
+    has_contributing: 0.05

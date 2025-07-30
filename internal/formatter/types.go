@@ -15,17 +15,18 @@ const (
 )
 
 type Record struct {
-	Repository  string `json:"repository"`
-	Stars       int    `json:"stars"`
-	Forks       int    `json:"forks"`
-	OpenIssues  int    `json:"open_issues"`
-	OpenPRs     int    `json:"open_prs"`
-	LastCommit  string `json:"last_commit"`
-	Language    string `json:"language"`
-	CICD        string `json:"ci_cd"`
-	License     string `json:"license"`
-	Description string `json:"description"`
-	Archived    string `json:"archived"`
+	Repository  string  `json:"repository"`
+	Score       float64 `json:"score"`
+	Stars       int     `json:"stars"`
+	Forks       int     `json:"forks"`
+	OpenIssues  int     `json:"open_issues"`
+	OpenPRs     int     `json:"open_prs"`
+	LastCommit  string  `json:"last_commit"`
+	Language    string  `json:"language"`
+	CICD        string  `json:"ci_cd"`
+	License     string  `json:"license"`
+	Description string  `json:"description"`
+	Archived    string  `json:"archived"`
 }
 
 func MetricsToRecord(m *github.RepoMetrics) *Record {
@@ -57,6 +58,7 @@ func MetricsToRecord(m *github.RepoMetrics) *Record {
 
 	return &Record{
 		Repository:  fmt.Sprintf("%s/%s", m.Owner, m.Name),
+		Score:       m.Score,
 		Stars:       m.Stars,
 		Forks:       m.Forks,
 		OpenIssues:  m.OpenIssues,

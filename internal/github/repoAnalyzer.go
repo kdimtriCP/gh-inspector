@@ -3,15 +3,19 @@ package github
 import (
 	"context"
 	"fmt"
+
+	"github.com/yourname/gh-inspector/internal/scoring"
 )
 
 type RepoAnalyzer struct {
 	client *Client
+	scorer *scoring.Scorer
 }
 
-func NewRepoAnalyzer(token string) *RepoAnalyzer {
+func NewRepoAnalyzer(token string, scoringConfig *scoring.Config) *RepoAnalyzer {
 	return &RepoAnalyzer{
 		client: NewClient(token),
+		scorer: scoring.NewScorer(scoringConfig),
 	}
 }
 
@@ -20,5 +24,8 @@ func (ra *RepoAnalyzer) Analyze(ctx context.Context, repo string) (*RepoMetrics,
 	if err != nil {
 		return nil, fmt.Errorf("failed to collect metrics for %s: %w", repo, err)
 	}
+
+	metrics.Score = ra.scorer.Score(metrics)
+
 	return metrics, nil
 }
