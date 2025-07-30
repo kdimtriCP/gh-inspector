@@ -21,7 +21,7 @@ func Execute() {
 func init() {
 	cobra.OnInitialize(initConfig)
 	rootCmd.PersistentFlags().String("config", "", "config file (default is ./configs/config.yaml)")
-	viper.BindPFlag("config", rootCmd.PersistentFlags().Lookup("config"))
+	_ = viper.BindPFlag("config", rootCmd.PersistentFlags().Lookup("config"))
 }
 
 func initConfig() {

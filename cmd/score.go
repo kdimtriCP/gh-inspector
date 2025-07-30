@@ -30,8 +30,8 @@ var scoreCmd = &cobra.Command{
 		ctx := context.Background()
 
 		w := tabwriter.NewWriter(os.Stdout, 0, 0, 3, ' ', 0)
-		fmt.Fprintln(w, "REPOSITORY\tSTARS\tFORKS\tOPEN ISSUES\tOPEN PRS\tLAST COMMIT\tLANGUAGE\tCI/CD\tLICENSE")
-		fmt.Fprintln(w, "----------\t-----\t-----\t-----------\t--------\t-----------\t--------\t-----\t-------")
+		_, _ = fmt.Fprintln(w, "REPOSITORY\tSTARS\tFORKS\tOPEN ISSUES\tOPEN PRS\tLAST COMMIT\tLANGUAGE\tCI/CD\tLICENSE")
+		_, _ = fmt.Fprintln(w, "----------\t-----\t-----\t-----------\t--------\t-----------\t--------\t-----\t-------")
 
 		for _, repo := range repos {
 			metrics, err := analyzer.Analyze(ctx, repo)
@@ -74,7 +74,7 @@ var scoreCmd = &cobra.Command{
 			)
 		}
 
-		w.Flush()
+		_ = w.Flush()
 		return nil
 	},
 }
