@@ -3,16 +3,17 @@ package cmd
 import (
 	"context"
 	"fmt"
-	"github.com/yourname/gh-inspector/internal/github"
 	"os"
-	"text/tabwriter"
-	"time"
 
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
+
+	"github.com/yourname/gh-inspector/internal/formatter"
+	"github.com/yourname/gh-inspector/internal/github"
 )
 
 var repos []string
+var outputFormat string
 
 var scoreCmd = &cobra.Command{
 	Use:   "score",
@@ -30,9 +31,7 @@ var scoreCmd = &cobra.Command{
 		analyzer := github.NewRepoAnalyzer(token)
 		ctx := context.Background()
 
-		w := tabwriter.NewWriter(os.Stdout, 0, 0, 3, ' ', 0)
-		_, _ = fmt.Fprintln(w, "REPOSITORY\tSTARS\tFORKS\tOPEN ISSUES\tOPEN PRS\tLAST COMMIT\tLANGUAGE\tCI/CD\tLICENSE")
-		_, _ = fmt.Fprintln(w, "----------\t-----\t-----\t-----------\t--------\t-----------\t--------\t-----\t-------")
+		var allMetrics []*github.RepoMetrics
 
 		for _, repo := range repos {
 			metrics, err := analyzer.Analyze(ctx, repo)
@@ -40,47 +39,32 @@ var scoreCmd = &cobra.Command{
 				fmt.Fprintf(os.Stderr, "Error analyzing %s: %v\n", repo, err)
 				continue
 			}
-
-			lastCommit := "N/A"
-			if !metrics.LastCommitDate.IsZero() {
-				daysAgo := int(time.Since(metrics.LastCommitDate).Hours() / 24)
-				lastCommit = fmt.Sprintf("%d days ago", daysAgo)
-			}
-
-			cicd := "No"
-			if metrics.HasCICD {
-				cicd = "Yes"
-			}
-
-			license := "No"
-			if metrics.HasLicense {
-				license = "Yes"
-			}
-
-			lang := metrics.PrimaryLanguage
-			if lang == "" {
-				lang = "N/A"
-			}
-
-			fmt.Fprintf(w, "%s/%s\t%d\t%d\t%d\t%d\t%s\t%s\t%s\t%s\n",
-				metrics.Owner, metrics.Name,
-				metrics.Stars,
-				metrics.Forks,
-				metrics.OpenIssues,
-				metrics.OpenPRs,
-				lastCommit,
-				lang,
-				cicd,
-				license,
-			)
+			allMetrics = append(allMetrics, metrics)
 		}
 
-		_ = w.Flush()
-		return nil
+		if len(allMetrics) == 0 {
+			return fmt.Errorf("no repositories could be analyzed")
+		}
+
+		format := outputFormat
+		if format == "" {
+			format = viper.GetString("output_format")
+		}
+		if format == "" {
+			format = formatter.FormatTable
+		}
+
+		formatter, err := formatter.New(format)
+		if err != nil {
+			return err
+		}
+
+		return formatter.Format(os.Stdout, allMetrics)
 	},
 }
 
 func init() {
 	rootCmd.AddCommand(scoreCmd)
 	scoreCmd.Flags().StringSliceVarP(&repos, "repos", "r", []string{}, "List of GitHub repositories")
+	scoreCmd.Flags().StringVarP(&outputFormat, "output", "o", "", "Output format (table, json, json-compact, csv)")
 }

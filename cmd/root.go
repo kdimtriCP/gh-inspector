@@ -1,7 +1,6 @@
 package cmd
 
 import (
-	"fmt"
 	"github.com/joho/godotenv"
 
 	"github.com/spf13/cobra"
@@ -31,9 +30,5 @@ func initConfig() {
 	_ = godotenv.Load(".env")
 	viper.AutomaticEnv()
 
-	if err := viper.ReadInConfig(); err != nil {
-		fmt.Println("Using default config")
-	} else {
-		fmt.Println("Using config file:", viper.ConfigFileUsed())
-	}
+	_ = viper.ReadInConfig()
 }
