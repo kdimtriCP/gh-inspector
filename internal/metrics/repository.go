@@ -28,3 +28,14 @@ func (m *Repository) GetIsArchived() bool          { return m.IsArchived }
 func (m *Repository) GetHasLicense() bool          { return m.HasLicense }
 func (m *Repository) GetHasCICD() bool             { return m.HasCICD }
 func (m *Repository) GetHasContributing() bool     { return m.HasContributing }
+
+func (m *Repository) DaysSinceLastCommit() int {
+	if m.LastCommitDate.IsZero() {
+		return -1
+	}
+	return int(time.Since(m.LastCommitDate).Hours() / 24)
+}
+
+func (m *Repository) FullName() string {
+	return m.Owner + "/" + m.Name
+}

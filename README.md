@@ -1,5 +1,8 @@
 # gh-inspector
 
+[![CI](https://github.com/kdimtricp/gh-inspector/actions/workflows/ci.yml/badge.svg)](https://github.com/kdimtricp/gh-inspector/actions/workflows/ci.yml)
+[![Go Report Card](https://goreportcard.com/badge/github.com/kdimtricp/gh-inspector)](https://goreportcard.com/report/github.com/kdimtricp/gh-inspector)
+
 `gh-inspector` is a CLI tool for analyzing and scoring GitHub repositories.  
 It helps you quickly assess the quality and activity of multiple projects before choosing a library, dependency, or contributing to open source.
 

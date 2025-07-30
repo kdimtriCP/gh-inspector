@@ -5,6 +5,8 @@ import (
 	"time"
 )
 
+//go:generate mockgen -source=$GOFILE -destination=../mock/mock_scoring/mock_$GOFILE -package=mock_scoring
+
 type RepositoryMetrics interface {
 	GetStars() int
 	GetForks() int
