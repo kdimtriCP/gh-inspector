@@ -2,3 +2,5 @@
 .DS_Store
 tmp/
 main
+.idea
+gh-inspector

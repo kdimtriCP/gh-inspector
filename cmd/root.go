@@ -2,7 +2,7 @@ package cmd
 
 import (
 	"fmt"
-	"os"
+	"github.com/joho/godotenv"
 
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
@@ -28,6 +28,7 @@ func initConfig() {
 	viper.SetConfigType("yaml")
 	viper.SetConfigName("config")
 	viper.AddConfigPath("./configs")
+	_ = godotenv.Load(".env")
 	viper.AutomaticEnv()
 
 	if err := viper.ReadInConfig(); err != nil {
