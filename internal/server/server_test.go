@@ -9,9 +9,9 @@ import (
 	"testing"
 	"time"
 
+	"github.com/golang/mock/gomock"
 	"github.com/stretchr/testify/require"
 
-	"github.com/golang/mock/gomock"
 	"github.com/kdimtriCP/gh-inspector/internal/metrics"
 	"github.com/kdimtriCP/gh-inspector/internal/mock/mock_github"
 )

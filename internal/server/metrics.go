@@ -90,7 +90,3 @@ func (m *MetricsRecorder) RecordCacheMiss() {
 func recordHTTPRequest(method, endpoint, status string) {
 	httpRequestsTotal.WithLabelValues(method, endpoint, status).Inc()
 }
-
-func recordRepositoryAnalysis(status string) {
-	repositoryAnalysisTotal.WithLabelValues(status).Inc()
-}
