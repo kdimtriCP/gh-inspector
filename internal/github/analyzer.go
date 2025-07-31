@@ -30,6 +30,10 @@ func (ra *RepoAnalyzer) SetCacheTTL(ttl time.Duration) {
 	ra.client.SetCacheTTL(ttl)
 }
 
+func (ra *RepoAnalyzer) SetMetricsRecorder(recorder metrics.Recorder) {
+	ra.client.SetMetricsRecorder(recorder)
+}
+
 func (ra *RepoAnalyzer) Analyze(ctx context.Context, url string) (*metrics.Repository, error) {
 	repo, err := ra.client.CollectBasicMetrics(ctx, url)
 	if err != nil {

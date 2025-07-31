@@ -1,0 +1,257 @@
+basePath: /
+definitions:
+  formatter.Record:
+    description: Repository scoring results
+    properties:
+      archived:
+        description: Archive status
+        enum:
+        - "Yes"
+        - "No"
+        example: "No"
+        type: string
+      ci_cd:
+        description: CI/CD presence
+        enum:
+        - "Yes"
+        - "No"
+        example: "Yes"
+        type: string
+      code_of_conduct:
+        description: Code of conduct presence
+        enum:
+        - "Yes"
+        - "No"
+        example: "Yes"
+        type: string
+      contributing:
+        description: Contributing guide presence
+        enum:
+        - "Yes"
+        - "No"
+        example: "Yes"
+        type: string
+      description:
+        description: Repository description
+        example: Production-Grade Container Scheduling and Management
+        type: string
+      forks:
+        description: Number of forks
+        example: 39000
+        type: integer
+      language:
+        description: Primary programming language
+        example: Go
+        type: string
+      last_commit:
+        description: Last commit relative time
+        example: 1 days ago
+        type: string
+      last_release:
+        description: Last release relative time
+        example: 7 days ago
+        type: string
+      license:
+        description: License presence
+        enum:
+        - "Yes"
+        - "No"
+        example: "Yes"
+        type: string
+      open_issues:
+        description: Number of open issues
+        example: 1500
+        type: integer
+      open_prs:
+        description: Number of open pull requests
+        example: 300
+        type: integer
+      readme:
+        description: README presence
+        enum:
+        - "Yes"
+        - "No"
+        example: "Yes"
+        type: string
+      releases:
+        description: Number of releases
+        example: 350
+        type: integer
+      repository:
+        description: Repository name in owner/name format
+        example: kubernetes/kubernetes
+        type: string
+      score:
+        description: Repository score (0-100)
+        example: 95.5
+        type: number
+      security:
+        description: Security policy presence
+        enum:
+        - "Yes"
+        - "No"
+        example: "Yes"
+        type: string
+      stars:
+        description: Number of stars
+        example: 108000
+        type: integer
+      watchers:
+        description: Number of watchers
+        example: 3500
+        type: integer
+    type: object
+  server.ErrorResponse:
+    description: Error response from the API
+    properties:
+      code:
+        description: Error code
+        example: NO_REPOSITORIES
+        type: string
+      error:
+        description: Error message
+        example: No repositories provided
+        type: string
+      timestamp:
+        description: Timestamp of the error
+        example: "2025-01-31T10:30:00Z"
+        type: string
+    type: object
+  server.HealthResponse:
+    description: Health status of the service
+    properties:
+      status:
+        description: Health status
+        example: healthy
+        type: string
+      timestamp:
+        description: Current timestamp
+        example: "2025-01-31T10:30:00Z"
+        type: string
+    type: object
+  server.ScoreRequest:
+    description: Request body for scoring GitHub repositories
+    properties:
+      output_format:
+        description: |-
+          Output format (optional)
+          @example json
+        example: json
+        type: string
+      repositories:
+        description: |-
+          List of repositories in owner/name format
+          @example ["kubernetes/kubernetes", "golang/go"]
+        example:
+        - kubernetes/kubernetes
+        - golang/go
+        items:
+          type: string
+        type: array
+    type: object
+  server.ScoreResponse:
+    description: Response containing scored repositories
+    properties:
+      error_count:
+        description: Number of failed scoring
+        example: 0
+        type: integer
+      repositories:
+        description: List of scored repositories
+        items:
+          $ref: '#/definitions/formatter.Record'
+        type: array
+      success_count:
+        description: Number of successfully scored repositories
+        example: 2
+        type: integer
+      timestamp:
+        description: Timestamp of the response
+        example: "2025-01-31T10:30:00Z"
+        type: string
+      total_count:
+        description: Total number of repositories requested
+        example: 2
+        type: integer
+    type: object
+host: localhost:8080
+info:
+  contact:
+    email: support@example.com
+    name: GitHub Inspector Team
+    url: https://github.com/kdimtriCP/gh-inspector
+  description: REST API for analyzing and scoring GitHub repositories
+  license:
+    name: Apache 2.0
+    url: http://www.apache.org/licenses/LICENSE-2.0.html
+  termsOfService: http://swagger.io/terms/
+  title: GitHub Inspector API
+  version: "1.0"
+paths:
+  /:
+    get:
+      description: Returns information about the API and available endpoints
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: API information
+          schema:
+            additionalProperties: true
+            type: object
+      summary: Get API information
+      tags:
+      - info
+  /api/v1/score:
+    post:
+      consumes:
+      - application/json
+      description: Analyzes and scores a list of GitHub repositories based on various
+        metrics
+      parameters:
+      - description: List of repositories to analyze
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/server.ScoreRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Successfully scored repositories
+          schema:
+            $ref: '#/definitions/server.ScoreResponse'
+        "400":
+          description: Bad request
+          schema:
+            $ref: '#/definitions/server.ErrorResponse'
+        "500":
+          description: Internal server error
+          schema:
+            $ref: '#/definitions/server.ErrorResponse'
+      summary: Score GitHub repositories
+      tags:
+      - analysis
+  /health:
+    get:
+      description: Returns the health status of the service
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Service is healthy
+          schema:
+            $ref: '#/definitions/server.HealthResponse'
+      summary: Health check
+      tags:
+      - monitoring
+schemes:
+- http
+- https
+securityDefinitions:
+  ApiKeyAuth:
+    in: header
+    name: Authorization
+    type: apiKey
+swagger: "2.0"

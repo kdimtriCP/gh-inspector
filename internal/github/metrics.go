@@ -18,9 +18,11 @@ func (c *Client) CollectBasicMetrics(ctx context.Context, repoFullName string) (
 		if data, found, err := c.cache.Get(cacheKey); err == nil && found {
 			var result metrics.Repository
 			if err := json.Unmarshal(data, &result); err == nil {
+				c.metricsRecorder.RecordCacheHit()
 				return &result, nil
 			}
 		}
+		c.metricsRecorder.RecordCacheMiss()
 	}
 
 	parts := strings.Split(repoFullName, "/")

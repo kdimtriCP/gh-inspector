@@ -14,26 +14,47 @@ const (
 	FormatCSV         = "csv"
 )
 
+// Record represents a scored repository
+// @Description Repository scoring results
 type Record struct {
-	Repository    string  `json:"repository"`
-	Score         float64 `json:"score"`
-	Stars         int     `json:"stars"`
-	Forks         int     `json:"forks"`
-	Watchers      int     `json:"watchers"`
-	OpenIssues    int     `json:"open_issues"`
-	OpenPRs       int     `json:"open_prs"`
-	LastCommit    string  `json:"last_commit"`
-	Releases      int     `json:"releases"`
-	LastRelease   string  `json:"last_release"`
-	Language      string  `json:"language"`
-	CICD          string  `json:"ci_cd"`
-	License       string  `json:"license"`
-	Contributing  string  `json:"contributing"`
-	Readme        string  `json:"readme"`
-	CodeOfConduct string  `json:"code_of_conduct"`
-	Security      string  `json:"security"`
-	Description   string  `json:"description"`
-	Archived      string  `json:"archived"`
+	// Repository name in owner/name format
+	Repository string `json:"repository" example:"kubernetes/kubernetes"`
+	// Repository score (0-100)
+	Score float64 `json:"score" example:"95.5"`
+	// Number of stars
+	Stars int `json:"stars" example:"108000"`
+	// Number of forks
+	Forks int `json:"forks" example:"39000"`
+	// Number of watchers
+	Watchers int `json:"watchers" example:"3500"`
+	// Number of open issues
+	OpenIssues int `json:"open_issues" example:"1500"`
+	// Number of open pull requests
+	OpenPRs int `json:"open_prs" example:"300"`
+	// Last commit relative time
+	LastCommit string `json:"last_commit" example:"1 days ago"`
+	// Number of releases
+	Releases int `json:"releases" example:"350"`
+	// Last release relative time
+	LastRelease string `json:"last_release" example:"7 days ago"`
+	// Primary programming language
+	Language string `json:"language" example:"Go"`
+	// CI/CD presence
+	CICD string `json:"ci_cd" example:"Yes" enums:"Yes,No"`
+	// License presence
+	License string `json:"license" example:"Yes" enums:"Yes,No"`
+	// Contributing guide presence
+	Contributing string `json:"contributing" example:"Yes" enums:"Yes,No"`
+	// README presence
+	Readme string `json:"readme" example:"Yes" enums:"Yes,No"`
+	// Code of conduct presence
+	CodeOfConduct string `json:"code_of_conduct" example:"Yes" enums:"Yes,No"`
+	// Security policy presence
+	Security string `json:"security" example:"Yes" enums:"Yes,No"`
+	// Repository description
+	Description string `json:"description" example:"Production-Grade Container Scheduling and Management"`
+	// Archive status
+	Archived string `json:"archived" example:"No" enums:"Yes,No"`
 }
 
 func MetricsToRecord(m *metrics.Repository) *Record {

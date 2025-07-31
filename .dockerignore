@@ -1,4 +1,38 @@
+# Environment and secrets
 .env
+
+# Documentation for Claude
 CLAUDE.md
 .claude
+
+# IDE files
 .idea
+.vscode/
+*.swp
+*.swo
+
+# Git
+.git
+.gitignore
+
+# Test and coverage files
+coverage.out
+coverage.html
+
+# Binary
+gh-inspector
+
+# Cache
+.gh-inspector-cache/
+
+# Temporary files
+tmp/
+*.tmp
+
+# Development files
+.air.toml
+
+# Generated docs (will be regenerated in Docker)
+swagger/swagger.json
+swagger/swagger.yaml
+swagger/docs.go

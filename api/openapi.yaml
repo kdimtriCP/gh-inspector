@@ -1,0 +1,255 @@
+openapi: 3.0.3
+info:
+  title: GitHub Inspector API
+  description: REST API for analyzing and scoring GitHub repositories
+  version: 1.0.0
+  contact:
+    name: GitHub Inspector Team
+    url: https://github.com/kdimtriCP/gh-inspector
+
+servers:
+  - url: http://localhost:8080
+    description: Local development server
+  - url: https://gh-inspector.example.com
+    description: Production server
+
+paths:
+  /:
+    get:
+      summary: Get API information
+      description: Returns information about the API and available endpoints
+      tags:
+        - Info
+      responses:
+        '200':
+          description: API information
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  service:
+                    type: string
+                    example: gh-inspector
+                  version:
+                    type: string
+                    example: 1.0.0
+                  endpoints:
+                    type: object
+                    properties:
+                      score:
+                        type: string
+                        example: /api/v1/score
+                      health:
+                        type: string
+                        example: /health
+                      metrics:
+                        type: string
+                        example: /metrics
+
+  /api/v1/score:
+    post:
+      summary: Score GitHub repositories
+      description: Analyzes and scores a list of GitHub repositories based on various metrics
+      tags:
+        - Analysis
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ScoreRequest'
+      responses:
+        '200':
+          description: Successfully scored repositories
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ScoreResponse'
+        '400':
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  /health:
+    get:
+      summary: Health check
+      description: Returns the health status of the service
+      tags:
+        - Monitoring
+      responses:
+        '200':
+          description: Service is healthy
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HealthResponse'
+
+  /metrics:
+    get:
+      summary: Prometheus metrics
+      description: Returns Prometheus metrics for monitoring
+      tags:
+        - Monitoring
+      responses:
+        '200':
+          description: Prometheus metrics
+          content:
+            text/plain:
+              schema:
+                type: string
+
+components:
+  schemas:
+    ScoreRequest:
+      type: object
+      required:
+        - repositories
+      properties:
+        repositories:
+          type: array
+          items:
+            type: string
+          minItems: 1
+          maxItems: 50
+          example: ["kubernetes/kubernetes", "golang/go"]
+          description: List of repositories in owner/name format
+        output_format:
+          type: string
+          enum: ["json", "json-compact"]
+          default: json
+          description: Output format for the response
+
+    ScoreResponse:
+      type: object
+      properties:
+        repositories:
+          type: array
+          items:
+            $ref: '#/components/schemas/RepositoryScore'
+        timestamp:
+          type: string
+          format: date-time
+          example: "2025-01-31T10:30:00Z"
+        total_count:
+          type: integer
+          example: 2
+        success_count:
+          type: integer
+          example: 2
+        error_count:
+          type: integer
+          example: 0
+
+    RepositoryScore:
+      type: object
+      properties:
+        repository:
+          type: string
+          example: "kubernetes/kubernetes"
+        score:
+          type: number
+          format: float
+          minimum: 0
+          maximum: 100
+          example: 95.5
+        stars:
+          type: integer
+          example: 108000
+        forks:
+          type: integer
+          example: 39000
+        watchers:
+          type: integer
+          example: 3500
+        open_issues:
+          type: integer
+          example: 1500
+        open_prs:
+          type: integer
+          example: 300
+        last_commit:
+          type: string
+          example: "1 days ago"
+        releases:
+          type: integer
+          example: 350
+        last_release:
+          type: string
+          example: "7 days ago"
+        language:
+          type: string
+          example: "Go"
+        ci_cd:
+          type: string
+          enum: ["Yes", "No"]
+          example: "Yes"
+        license:
+          type: string
+          enum: ["Yes", "No"]
+          example: "Yes"
+        contributing:
+          type: string
+          enum: ["Yes", "No"]
+          example: "Yes"
+        readme:
+          type: string
+          enum: ["Yes", "No"]
+          example: "Yes"
+        code_of_conduct:
+          type: string
+          enum: ["Yes", "No"]
+          example: "Yes"
+        security:
+          type: string
+          enum: ["Yes", "No"]
+          example: "Yes"
+        description:
+          type: string
+          example: "Production-Grade Container Scheduling and Management"
+        archived:
+          type: string
+          enum: ["Yes", "No"]
+          example: "No"
+
+    HealthResponse:
+      type: object
+      properties:
+        status:
+          type: string
+          enum: ["healthy", "unhealthy"]
+          example: "healthy"
+        timestamp:
+          type: string
+          format: date-time
+          example: "2025-01-31T10:30:00Z"
+
+    ErrorResponse:
+      type: object
+      properties:
+        error:
+          type: string
+          example: "No repositories provided"
+        code:
+          type: string
+          example: "NO_REPOSITORIES"
+        timestamp:
+          type: string
+          format: date-time
+          example: "2025-01-31T10:30:00Z"
+
+tags:
+  - name: Info
+    description: API information endpoints
+  - name: Analysis
+    description: Repository analysis endpoints
+  - name: Monitoring
+    description: Health and metrics endpoints
