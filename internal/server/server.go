@@ -4,6 +4,7 @@ import (
 	"context"
 	"fmt"
 	"net/http"
+	"sync"
 	"time"
 
 	"github.com/go-chi/chi/v5"
@@ -22,6 +23,7 @@ type Server struct {
 	httpServer      *http.Server
 	config          *Config
 	metricsRecorder metrics.Recorder
+	mu              sync.Mutex
 }
 
 type Config struct {
@@ -83,6 +85,7 @@ func (s *Server) setupRoutes() {
 }
 
 func (s *Server) Start() error {
+	s.mu.Lock()
 	s.httpServer = &http.Server{
 		Addr:         fmt.Sprintf(":%d", s.config.Port),
 		Handler:      s.router,
@@ -90,12 +93,16 @@ func (s *Server) Start() error {
 		WriteTimeout: s.config.WriteTimeout,
 		IdleTimeout:  s.config.IdleTimeout,
 	}
+	s.mu.Unlock()
 
 	fmt.Printf("Server starting on port %d...\n", s.config.Port)
 	return s.httpServer.ListenAndServe()
 }
 
 func (s *Server) Shutdown(ctx context.Context) error {
+	s.mu.Lock()
+	defer s.mu.Unlock()
+
 	if s.httpServer != nil {
 		return s.httpServer.Shutdown(ctx)
 	}

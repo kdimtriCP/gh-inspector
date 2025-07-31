@@ -201,12 +201,15 @@ func TestServerShutdown(t *testing.T) {
 	})
 
 	// Start server in goroutine
+	serverStarted := make(chan struct{})
 	go func() {
+		close(serverStarted)
 		srv.Start()
 	}()
 
-	// Give server time to start
-	time.Sleep(100 * time.Millisecond)
+	// Wait for server to start
+	<-serverStarted
+	time.Sleep(200 * time.Millisecond)
 
 	// Shutdown server
 	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
