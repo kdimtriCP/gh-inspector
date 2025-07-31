@@ -60,6 +60,10 @@ func TestScore(t *testing.T) {
 				m.EXPECT().GetHasContributing().Return(true)
 				m.EXPECT().GetReleaseCount().Return(20)
 				m.EXPECT().GetLastReleaseDate().Return(time.Now().AddDate(0, 0, -7))
+				m.EXPECT().GetHasReadme().Return(true)
+				m.EXPECT().GetHasCodeOfConduct().Return(true)
+				m.EXPECT().GetHasSecurity().Return(true)
+				m.EXPECT().GetWatchers().Return(5000)
 			},
 			wantMin: 85.0,
 			wantMax: 100.0,
@@ -78,6 +82,10 @@ func TestScore(t *testing.T) {
 				m.EXPECT().GetHasContributing().Return(false)
 				m.EXPECT().GetReleaseCount().Return(0)
 				m.EXPECT().GetLastReleaseDate().Return(time.Time{})
+				m.EXPECT().GetHasReadme().Return(false)
+				m.EXPECT().GetHasCodeOfConduct().Return(false)
+				m.EXPECT().GetHasSecurity().Return(false)
+				m.EXPECT().GetWatchers().Return(10)
 			},
 			wantMin: 0.0,
 			wantMax: 30.0,
@@ -96,6 +104,10 @@ func TestScore(t *testing.T) {
 				m.EXPECT().GetHasContributing().Return(false)
 				m.EXPECT().GetReleaseCount().Return(5)
 				m.EXPECT().GetLastReleaseDate().Return(time.Now().AddDate(0, -2, 0))
+				m.EXPECT().GetHasReadme().Return(true)
+				m.EXPECT().GetHasCodeOfConduct().Return(false)
+				m.EXPECT().GetHasSecurity().Return(false)
+				m.EXPECT().GetWatchers().Return(500)
 			},
 			wantMin: 40.0,
 			wantMax: 70.0,

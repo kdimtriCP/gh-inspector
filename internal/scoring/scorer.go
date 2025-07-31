@@ -19,6 +19,10 @@ type RepositoryMetrics interface {
 	GetHasContributing() bool
 	GetReleaseCount() int
 	GetLastReleaseDate() time.Time
+	GetHasReadme() bool
+	GetHasCodeOfConduct() bool
+	GetHasSecurity() bool
+	GetWatchers() int
 }
 
 type Scorer struct {
@@ -64,6 +68,18 @@ func (s *Scorer) Score(metrics RepositoryMetrics) float64 {
 	if metrics.GetHasContributing() {
 		score += weights.HasContributing
 	}
+	if metrics.GetHasReadme() {
+		score += weights.HasReadme
+	}
+	if metrics.GetHasCodeOfConduct() {
+		score += weights.HasCodeOfConduct
+	}
+	if metrics.GetHasSecurity() {
+		score += weights.HasSecurity
+	}
+
+	watchersScore := s.calculateWatchersScore(metrics.GetWatchers())
+	score += watchersScore * weights.Watchers
 
 	releaseScore := s.calculateReleaseFrequencyScore(metrics.GetReleaseCount(), metrics.GetLastReleaseDate())
 	score += releaseScore * weights.ReleaseFrequency
@@ -141,4 +157,8 @@ func (s *Scorer) calculateReleaseFrequencyScore(releaseCount int, lastReleaseDat
 	frequencyScore := math.Min(float64(releaseCount)/10.0, 1.0)
 
 	return (recencyScore + frequencyScore) / 2.0
+}
+
+func (s *Scorer) calculateWatchersScore(watchers int) float64 {
+	return math.Min(math.Log10(float64(watchers+1))/4.0, 1.0)
 }

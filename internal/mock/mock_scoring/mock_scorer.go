@@ -62,6 +62,20 @@ func (mr *MockRepositoryMetricsMockRecorder) GetHasCICD() *gomock.Call {
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetHasCICD", reflect.TypeOf((*MockRepositoryMetrics)(nil).GetHasCICD))
 }
 
+// GetHasCodeOfConduct mocks base method.
+func (m *MockRepositoryMetrics) GetHasCodeOfConduct() bool {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "GetHasCodeOfConduct")
+	ret0, _ := ret[0].(bool)
+	return ret0
+}
+
+// GetHasCodeOfConduct indicates an expected call of GetHasCodeOfConduct.
+func (mr *MockRepositoryMetricsMockRecorder) GetHasCodeOfConduct() *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetHasCodeOfConduct", reflect.TypeOf((*MockRepositoryMetrics)(nil).GetHasCodeOfConduct))
+}
+
 // GetHasContributing mocks base method.
 func (m *MockRepositoryMetrics) GetHasContributing() bool {
 	m.ctrl.T.Helper()
@@ -88,6 +102,34 @@ func (m *MockRepositoryMetrics) GetHasLicense() bool {
 func (mr *MockRepositoryMetricsMockRecorder) GetHasLicense() *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetHasLicense", reflect.TypeOf((*MockRepositoryMetrics)(nil).GetHasLicense))
+}
+
+// GetHasReadme mocks base method.
+func (m *MockRepositoryMetrics) GetHasReadme() bool {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "GetHasReadme")
+	ret0, _ := ret[0].(bool)
+	return ret0
+}
+
+// GetHasReadme indicates an expected call of GetHasReadme.
+func (mr *MockRepositoryMetricsMockRecorder) GetHasReadme() *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetHasReadme", reflect.TypeOf((*MockRepositoryMetrics)(nil).GetHasReadme))
+}
+
+// GetHasSecurity mocks base method.
+func (m *MockRepositoryMetrics) GetHasSecurity() bool {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "GetHasSecurity")
+	ret0, _ := ret[0].(bool)
+	return ret0
+}
+
+// GetHasSecurity indicates an expected call of GetHasSecurity.
+func (mr *MockRepositoryMetricsMockRecorder) GetHasSecurity() *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetHasSecurity", reflect.TypeOf((*MockRepositoryMetrics)(nil).GetHasSecurity))
 }
 
 // GetIsArchived mocks base method.
@@ -186,4 +228,18 @@ func (m *MockRepositoryMetrics) GetStars() int {
 func (mr *MockRepositoryMetricsMockRecorder) GetStars() *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetStars", reflect.TypeOf((*MockRepositoryMetrics)(nil).GetStars))
+}
+
+// GetWatchers mocks base method.
+func (m *MockRepositoryMetrics) GetWatchers() int {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "GetWatchers")
+	ret0, _ := ret[0].(int)
+	return ret0
+}
+
+// GetWatchers indicates an expected call of GetWatchers.
+func (mr *MockRepositoryMetricsMockRecorder) GetWatchers() *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetWatchers", reflect.TypeOf((*MockRepositoryMetrics)(nil).GetWatchers))
 }

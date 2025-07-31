@@ -1,6 +1,6 @@
 module github.com/kdimtriCP/gh-inspector
 
-go 1.24.1
+go 1.24.4
 
 require (
 	github.com/joho/godotenv v1.5.1
@@ -16,7 +16,6 @@ require (
 	github.com/fsnotify/fsnotify v1.9.0 // indirect
 	github.com/go-viper/mapstructure/v2 v2.4.0 // indirect
 	github.com/golang/mock v1.6.0 // indirect
-	github.com/inconshreveable/mousetrap v1.1.0 // indirect
 	github.com/mattn/go-runewidth v0.0.16 // indirect
 	github.com/mattn/go-sqlite3 v1.14.30 // indirect
 	github.com/pelletier/go-toml/v2 v2.2.4 // indirect

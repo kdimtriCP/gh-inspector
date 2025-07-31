@@ -85,6 +85,9 @@ type RepositoryGraphQL struct {
 	LicenseInfo      *License
 	Object           TreeObject         `graphql:"object(expression: \"HEAD:\")"`
 	Releases         ReleasesConnection `graphql:"releases(first: 10, orderBy: {field: CREATED_AT, direction: DESC})"`
+	Watchers         struct {
+		TotalCount githubv4.Int
+	}
 }
 
 type RepositoryQuery struct {

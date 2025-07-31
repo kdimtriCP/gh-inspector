@@ -51,6 +51,7 @@ func (c *Client) CollectBasicMetrics(ctx context.Context, repoFullName string) (
 		Description: string(repo.Description),
 		IsArchived:  bool(repo.IsArchived),
 		HasLicense:  repo.LicenseInfo != nil,
+		Watchers:    int(repo.Watchers.TotalCount),
 	}
 
 	if repo.PrimaryLanguage != nil {
@@ -72,6 +73,15 @@ func (c *Client) CollectBasicMetrics(ctx context.Context, repoFullName string) (
 		}
 		if strings.HasPrefix(entryLower, metrics.FileContributingAlt) {
 			result.HasContributing = true
+		}
+		if strings.HasPrefix(entryLower, "readme") {
+			result.HasReadme = true
+		}
+		if strings.HasPrefix(entryLower, "code_of_conduct") || strings.HasPrefix(entryLower, "code-of-conduct") {
+			result.HasCodeOfConduct = true
+		}
+		if strings.HasPrefix(entryLower, "security") {
+			result.HasSecurity = true
 		}
 	}
 

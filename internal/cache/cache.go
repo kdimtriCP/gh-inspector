@@ -13,7 +13,7 @@ func New(cacheDir string) (Cache, error) {
 		cacheDir = ".gh-inspector-cache"
 	}
 
-	if err := os.MkdirAll(cacheDir, 0755); err != nil {
+	if err := os.MkdirAll(cacheDir, 0750); err != nil {
 		return nil, fmt.Errorf("failed to create cache directory: %w", err)
 	}
 

@@ -15,20 +15,25 @@ const (
 )
 
 type Record struct {
-	Repository  string  `json:"repository"`
-	Score       float64 `json:"score"`
-	Stars       int     `json:"stars"`
-	Forks       int     `json:"forks"`
-	OpenIssues  int     `json:"open_issues"`
-	OpenPRs     int     `json:"open_prs"`
-	LastCommit  string  `json:"last_commit"`
-	Releases    int     `json:"releases"`
-	LastRelease string  `json:"last_release"`
-	Language    string  `json:"language"`
-	CICD        string  `json:"ci_cd"`
-	License     string  `json:"license"`
-	Description string  `json:"description"`
-	Archived    string  `json:"archived"`
+	Repository    string  `json:"repository"`
+	Score         float64 `json:"score"`
+	Stars         int     `json:"stars"`
+	Forks         int     `json:"forks"`
+	Watchers      int     `json:"watchers"`
+	OpenIssues    int     `json:"open_issues"`
+	OpenPRs       int     `json:"open_prs"`
+	LastCommit    string  `json:"last_commit"`
+	Releases      int     `json:"releases"`
+	LastRelease   string  `json:"last_release"`
+	Language      string  `json:"language"`
+	CICD          string  `json:"ci_cd"`
+	License       string  `json:"license"`
+	Contributing  string  `json:"contributing"`
+	Readme        string  `json:"readme"`
+	CodeOfConduct string  `json:"code_of_conduct"`
+	Security      string  `json:"security"`
+	Description   string  `json:"description"`
+	Archived      string  `json:"archived"`
 }
 
 func MetricsToRecord(m *metrics.Repository) *Record {
@@ -64,21 +69,46 @@ func MetricsToRecord(m *metrics.Repository) *Record {
 		lastRelease = fmt.Sprintf("%d days ago", daysAgo)
 	}
 
+	contributing := "No"
+	if m.HasContributing {
+		contributing = "Yes"
+	}
+
+	readme := "No"
+	if m.HasReadme {
+		readme = "Yes"
+	}
+
+	codeOfConduct := "No"
+	if m.HasCodeOfConduct {
+		codeOfConduct = "Yes"
+	}
+
+	security := "No"
+	if m.HasSecurity {
+		security = "Yes"
+	}
+
 	return &Record{
-		Repository:  fmt.Sprintf("%s/%s", m.Owner, m.Name),
-		Score:       m.Score,
-		Stars:       m.Stars,
-		Forks:       m.Forks,
-		OpenIssues:  m.OpenIssues,
-		OpenPRs:     m.OpenPRs,
-		LastCommit:  lastCommit,
-		Releases:    m.ReleaseCount,
-		LastRelease: lastRelease,
-		Language:    lang,
-		CICD:        cicd,
-		License:     license,
-		Description: m.Description,
-		Archived:    archived,
+		Repository:    fmt.Sprintf("%s/%s", m.Owner, m.Name),
+		Score:         m.Score,
+		Stars:         m.Stars,
+		Forks:         m.Forks,
+		Watchers:      m.Watchers,
+		OpenIssues:    m.OpenIssues,
+		OpenPRs:       m.OpenPRs,
+		LastCommit:    lastCommit,
+		Releases:      m.ReleaseCount,
+		LastRelease:   lastRelease,
+		Language:      lang,
+		CICD:          cicd,
+		License:       license,
+		Contributing:  contributing,
+		Readme:        readme,
+		CodeOfConduct: codeOfConduct,
+		Security:      security,
+		Description:   m.Description,
+		Archived:      archived,
 	}
 }
 
@@ -108,6 +138,7 @@ func (r *Record) Strings() []string {
 		fmt.Sprintf("%.1f", r.Score),
 		fmt.Sprintf("%d", r.Stars),
 		fmt.Sprintf("%d", r.Forks),
+		fmt.Sprintf("%d", r.Watchers),
 		fmt.Sprintf("%d", r.OpenIssues),
 		fmt.Sprintf("%d", r.OpenPRs),
 		r.LastCommit,
@@ -116,6 +147,7 @@ func (r *Record) Strings() []string {
 		r.Language,
 		r.CICD,
 		r.License,
+		r.Contributing,
 		r.Description,
 		r.Archived,
 	}
@@ -127,6 +159,7 @@ func GetRecordHeaders() []string {
 		"Score",
 		"Stars",
 		"Forks",
+		"Watchers",
 		"Open Issues",
 		"Open PRs",
 		"Last Commit",
@@ -135,6 +168,7 @@ func GetRecordHeaders() []string {
 		"Language",
 		"CI/CD",
 		"License",
+		"Contributing",
 		"Description",
 		"Archived",
 	}

@@ -3,22 +3,26 @@ package metrics
 import "time"
 
 type Repository struct {
-	Owner           string
-	Name            string
-	Stars           int
-	Forks           int
-	OpenIssues      int
-	OpenPRs         int
-	LastCommitDate  time.Time
-	Description     string
-	PrimaryLanguage string
-	IsArchived      bool
-	HasCICD         bool
-	HasLicense      bool
-	HasContributing bool
-	ReleaseCount    int
-	LastReleaseDate time.Time
-	Score           float64
+	Owner            string
+	Name             string
+	Stars            int
+	Forks            int
+	OpenIssues       int
+	OpenPRs          int
+	LastCommitDate   time.Time
+	Description      string
+	PrimaryLanguage  string
+	IsArchived       bool
+	HasCICD          bool
+	HasLicense       bool
+	HasContributing  bool
+	ReleaseCount     int
+	LastReleaseDate  time.Time
+	HasReadme        bool
+	HasCodeOfConduct bool
+	HasSecurity      bool
+	Watchers         int
+	Score            float64
 }
 
 func (m *Repository) GetStars() int                 { return m.Stars }
@@ -32,6 +36,10 @@ func (m *Repository) GetHasCICD() bool              { return m.HasCICD }
 func (m *Repository) GetHasContributing() bool      { return m.HasContributing }
 func (m *Repository) GetReleaseCount() int          { return m.ReleaseCount }
 func (m *Repository) GetLastReleaseDate() time.Time { return m.LastReleaseDate }
+func (m *Repository) GetHasReadme() bool            { return m.HasReadme }
+func (m *Repository) GetHasCodeOfConduct() bool     { return m.HasCodeOfConduct }
+func (m *Repository) GetHasSecurity() bool          { return m.HasSecurity }
+func (m *Repository) GetWatchers() int              { return m.Watchers }
 
 func (m *Repository) DaysSinceLastCommit() int {
 	if m.LastCommitDate.IsZero() {

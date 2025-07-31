@@ -187,6 +187,7 @@ func TestCSVFormatter(t *testing.T) {
 		"85.5",
 		"100",
 		"10",
+		"0",
 		"5",
 		"2",
 		"Go",
